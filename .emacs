@@ -1,15 +1,14 @@
 (menu-bar-mode -1)
-(iswitchb-mode 't)
 (show-paren-mode 't)
-(transient-mark-mode 't)
+(ido-mode 't)
 
+(setq inhibit-splash-screen 't)
+
+;; TODO: Replace with ELPA since only being used for paredit-mode right now.
 (setq load-path (cons "~/pubsrc/lisp" load-path))
 
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
-
-;; nXhtml
-(load "~/pubsrc/lisp/nxml-mode-20041004/rng-auto.el")
 
 ;;; Thanks to: http://blog.bookworm.at/2007/03/pretty-print-xml-with-emacs.html
 (defun pretty-print-xml-region (begin end)
@@ -36,6 +35,7 @@ then indents the markup by using nxml's indentation rules."
 
 ;;; Thanks to: http://www.xsteve.at/prg/emacs/power-user-tips.html
 (require 'ffap)
+(setq ffap-bindings '((global-set-key "\C-xF" 'find-file-at-point))) ; Don't break ido-mode
 (ffap-bindings)
 
 ;;; Thanks to http://trey-jackson.blogspot.com/2008/01/emacs-tip-11-uniquify.html
@@ -54,6 +54,8 @@ then indents the markup by using nxml's indentation rules."
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
+;; TODO: Get clojure, clojure-contrib, slime and paredit through ELPA
+
 ;;; Thanks to http://riddell.us/tutorial/slime_swank/slime_swank.html
 
 ;; clojure-mode
@@ -70,7 +72,10 @@ then indents the markup by using nxml's indentation rules."
   '(progn (define-key paredit-mode-map (kbd "C-c 0") 'paredit-forward-slurp-sexp)
 	  (define-key paredit-mode-map (kbd "C-c )") 'paredit-forward-barf-sexp)
 	  (define-key paredit-mode-map (kbd "C-c 9") 'paredit-backward-slurp-sexp)
-	  (define-key paredit-mode-map (kbd "C-c (") 'paredit-backward-barf-sexp)))
+	  (define-key paredit-mode-map (kbd "C-c (") 'paredit-backward-barf-sexp)
+	  (define-key paredit-mode-map (kbd "M-R") 'paredit-raise-sexp)
+	  (define-key paredit-mode-map (kbd "M-r") nil))) ; So as to not conflict with
+							  ; slime-repl-previous-matching-input
 
 ;; swank-clojure
 (add-to-list 'load-path "~/pubsrc/swank-clojure")
