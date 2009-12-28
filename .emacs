@@ -4,11 +4,12 @@
 
 (setq inhibit-splash-screen 't)
 
-;; TODO: Replace with ELPA since only being used for paredit-mode right now.
-(setq load-path (cons "~/pubsrc/lisp" load-path))
-
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+
+;;; Installed by package-install.el
+(when (load (expand-file-name "~/.emacs.d/elpa/package.el"))
+  (package-initialize))
 
 ;;; Thanks to: http://blog.bookworm.at/2007/03/pretty-print-xml-with-emacs.html
 (defun pretty-print-xml-region (begin end)
@@ -54,17 +55,8 @@ then indents the markup by using nxml's indentation rules."
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-;; TODO: Get clojure, clojure-contrib, slime and paredit through ELPA
-
-;;; Thanks to http://riddell.us/tutorial/slime_swank/slime_swank.html
-
-;; clojure-mode
-(add-to-list 'load-path "~/pubsrc/clojure-mode")
-(require 'clojure-mode)
-
-;; paredit
-(autoload 'paredit-mode "paredit" "Minor mode for pseudo-structurally editing Lisp code." t)
-
+;; Paredit for Clojure and the Slime REPL
+(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
 (setq clojure-enable-paredit t)
 
@@ -74,22 +66,6 @@ then indents the markup by using nxml's indentation rules."
 	  (define-key paredit-mode-map (kbd "C-c 9") 'paredit-backward-slurp-sexp)
 	  (define-key paredit-mode-map (kbd "C-c (") 'paredit-backward-barf-sexp)
 	  (define-key paredit-mode-map (kbd "M-R") 'paredit-raise-sexp)
-	  (define-key paredit-mode-map (kbd "M-r") nil))) ; So as to not conflict with
-							  ; slime-repl-previous-matching-input
-
-;; swank-clojure
-(add-to-list 'load-path "~/pubsrc/swank-clojure")
-(require 'swank-clojure-autoload)
-(swank-clojure-config
- (setq swank-clojure-java-path "/usr/local/woodstock/JDK/jdk1.5.0_15-bristol/bin/java")
- (setq swank-clojure-jar-path "~/pubsrc/clojure_1.0.0/clojure-1.0.0.jar")
- (setq swank-clojure-extra-classpaths
-       (list "~/pubsrc/clojure-contrib/clojure-contrib.jar")))
-
-;; slime
-(eval-after-load "slime"
-  '(progn (slime-setup '(slime-repl))))
-
-(add-to-list 'load-path "~/pubsrc/slime")
-(require 'slime)
-(slime-setup)
+	  (define-key paredit-mode-map (kbd "M-r") nil)))
+					; So as to not conflict with
+					; slime-repl-previous-matching-input
