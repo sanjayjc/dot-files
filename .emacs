@@ -1,6 +1,9 @@
 (menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 (show-paren-mode 't)
 (ido-mode 't)
+(transient-mark-mode 't)
 
 (setq inhibit-splash-screen 't)
 
@@ -26,6 +29,11 @@ then indents the markup by using nxml's indentation rules."
 
 ;; Emacs backup file handling
 (setq backup-directory-alist `(("." . ".emacs-backup")))
+
+;;; Improve shell experience.
+(setenv "PAGER" "/bin/cat")
+(setenv "EDITOR" "/usr/bin/emacsclient")
+(server-start)
  
 ;;; Thanks to: http://blog.zenspider.com/2007/09/emacs-is-ber.html
 (defadvice find-file-at-point (around goto-line compile activate)
