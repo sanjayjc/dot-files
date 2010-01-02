@@ -3,7 +3,7 @@
 (scroll-bar-mode -1)
 (show-paren-mode 't)
 (ido-mode 't)
-(transient-mark-mode 't)
+(delete-selection-mode 't)
 
 (setq inhibit-splash-screen 't)
 
@@ -63,9 +63,11 @@ then indents the markup by using nxml's indentation rules."
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-;; Paredit for Clojure and the Slime REPL
+;; Paredit for Clojure, the Slime REPL and elisp
 (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
 (add-hook 'clojure-mode-hook (lambda () (paredit-mode +1)))
+(add-hook 'lisp-mode-hook (lambda () (paredit-mode +1)))
+
 (setq clojure-enable-paredit t)
 
 (eval-after-load "paredit"
@@ -77,3 +79,10 @@ then indents the markup by using nxml's indentation rules."
 	  (define-key paredit-mode-map (kbd "M-r") nil)))
 					; So as to not conflict with
 					; slime-repl-previous-matching-input
+
+;; Load settings specific to a swank-clojure-project
+(add-hook 'swank-clojure-project-hook
+	  '(lambda ()
+	     (when (file-exists-p
+		    (expand-file-name "swank-clojure-init.el" path))
+	       (load (expand-file-name "swank-clojure-init.el" path)))))
