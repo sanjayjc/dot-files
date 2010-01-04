@@ -3,7 +3,7 @@
 (scroll-bar-mode -1)
 (show-paren-mode 't)
 (ido-mode 't)
-(delete-selection-mode 't)
+(transient-mark-mode 't)
 
 (setq inhibit-splash-screen 't)
 
@@ -62,6 +62,13 @@ then indents the markup by using nxml's indentation rules."
 ;; See http://www.emacswiki.org/emacs/AnsiColor
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;; Tweak to syntax table in shell mode
+(defvar sh-table
+  (let ((table (make-syntax-table)))	; since filenames contain ...
+    (modify-syntax-entry ?. "w" table)	; periods
+    table))
+(add-hook 'shell-mode-hook (lambda () (set-syntax-table sh-table)))
 
 ;; Paredit for Clojure, the Slime REPL and elisp
 (add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
