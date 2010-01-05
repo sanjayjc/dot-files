@@ -87,6 +87,11 @@ then indents the markup by using nxml's indentation rules."
 					; So as to not conflict with
 					; slime-repl-previous-matching-input
 
+;; Make Slime's REPL Clojure friendly
+(add-hook 'slime-repl-mode-hook
+	  '(lambda ()
+	     (set-syntax-table clojure-mode-syntax-table)))
+
 ;; Load settings specific to a swank-clojure-project
 (add-hook 'swank-clojure-project-hook
 	  '(lambda ()
